@@ -7,9 +7,9 @@ pipeline {
     }
 
     environment {
-        APP_NODE_IP   = "34.245.23.133"
+        APP_NODE_IP = "52.30.138.39"              // Replace with your App Node public IP
         APP_NODE_USER = "ubuntu"
-        APP_NODE_KEY  = "/var/lib/jenkins/.ssh/appnode.pem"
+        APP_NODE_KEY = "/var/lib/jenkins/.ssh/Rajesh.pem"
     }
 
     stages {
@@ -33,10 +33,10 @@ pipeline {
 
         stage('Deploy to Tomcat') {
             steps {
+                // Copy WAR file to App Node and restart Tomcat
                 sh """
                   scp -o StrictHostKeyChecking=no -i ${APP_NODE_KEY} target/*.war ${APP_NODE_USER}@${APP_NODE_IP}:/opt/tomcat/webapps/
-
-                  ssh -o StrictHostKeyChecking=no -i ${APP_NODE_KEY} ${APP_NODE_USER}@${APP_NODE_IP} "sudo systemctl restart tomcat"
+                  ssh -o StrictHostKeyChecking=no -i ${APP_NODE_KEY} ${APP_NODE_USER}@${APP_NODE_IP} 'sudo systemctl restart tomcat'
                 """
             }
         }
@@ -44,7 +44,7 @@ pipeline {
 
     post {
         success {
-            echo '✅ Build, Test, and Deployment Successful! Tomcat restarted.'
+            echo '✅ Build, Test, and Deployment Successful!'
         }
         failure {
             echo '❌ Something went wrong.'
